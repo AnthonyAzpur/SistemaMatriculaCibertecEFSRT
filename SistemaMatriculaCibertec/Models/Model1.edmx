@@ -1,0 +1,295 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="SistemaMatriculaDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Alumno">
+          <Key>
+            <PropertyRef Name="IdAlumno" />
+          </Key>
+          <Property Name="IdAlumno" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CodigoAlumno" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Nombres" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Apellidos" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="DNI" Type="char" MaxLength="8" Nullable="false" />
+          <Property Name="Correo" Type="varchar" MaxLength="100" />
+          <Property Name="Telefono" Type="varchar" MaxLength="15" />
+          <Property Name="Estado" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="FechaRegistro" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Curso">
+          <Key>
+            <PropertyRef Name="IdCurso" />
+          </Key>
+          <Property Name="IdCurso" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CodigoCurso" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="NombreCurso" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Creditos" Type="int" Nullable="false" />
+          <Property Name="Vacantes" Type="int" Nullable="false" />
+          <Property Name="Estado" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Matricula">
+          <Key>
+            <PropertyRef Name="IdMatricula" />
+          </Key>
+          <Property Name="IdMatricula" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CodigoMatricula" Type="varchar" MaxLength="12" Nullable="false" />
+          <Property Name="IdAlumno" Type="int" Nullable="false" />
+          <Property Name="IdCurso" Type="int" Nullable="false" />
+          <Property Name="FechaMatricula" Type="datetime" Nullable="false" />
+          <Property Name="Estado" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Retiro">
+          <Key>
+            <PropertyRef Name="IdRetiro" />
+          </Key>
+          <Property Name="IdRetiro" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdMatricula" Type="int" Nullable="false" />
+          <Property Name="FechaRetiro" Type="datetime" Nullable="false" />
+          <Property Name="Motivo" Type="varchar" MaxLength="250" />
+        </EntityType>
+        <Association Name="FK_Matricula_Alumno">
+          <End Role="Alumno" Type="Self.Alumno" Multiplicity="1" />
+          <End Role="Matricula" Type="Self.Matricula" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Alumno">
+              <PropertyRef Name="IdAlumno" />
+            </Principal>
+            <Dependent Role="Matricula">
+              <PropertyRef Name="IdAlumno" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Matricula_Curso">
+          <End Role="Curso" Type="Self.Curso" Multiplicity="1" />
+          <End Role="Matricula" Type="Self.Matricula" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Curso">
+              <PropertyRef Name="IdCurso" />
+            </Principal>
+            <Dependent Role="Matricula">
+              <PropertyRef Name="IdCurso" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Retiro_Matricula">
+          <End Role="Matricula" Type="Self.Matricula" Multiplicity="1" />
+          <End Role="Retiro" Type="Self.Retiro" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Matricula">
+              <PropertyRef Name="IdMatricula" />
+            </Principal>
+            <Dependent Role="Retiro">
+              <PropertyRef Name="IdMatricula" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SistemaMatriculaDBModelStoreContainer">
+          <EntitySet Name="Alumno" EntityType="Self.Alumno" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Curso" EntityType="Self.Curso" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Matricula" EntityType="Self.Matricula" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Retiro" EntityType="Self.Retiro" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Matricula_Alumno" Association="Self.FK_Matricula_Alumno">
+            <End Role="Alumno" EntitySet="Alumno" />
+            <End Role="Matricula" EntitySet="Matricula" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Matricula_Curso" Association="Self.FK_Matricula_Curso">
+            <End Role="Curso" EntitySet="Curso" />
+            <End Role="Matricula" EntitySet="Matricula" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Retiro_Matricula" Association="Self.FK_Retiro_Matricula">
+            <End Role="Matricula" EntitySet="Matricula" />
+            <End Role="Retiro" EntitySet="Retiro" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SistemaMatriculaDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Alumno">
+          <Key>
+            <PropertyRef Name="IdAlumno" />
+          </Key>
+          <Property Name="IdAlumno" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CodigoAlumno" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Nombres" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Apellidos" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DNI" Type="String" MaxLength="8" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Correo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Telefono" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="Estado" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FechaRegistro" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Matricula" Relationship="Self.FK_Matricula_Alumno" FromRole="Alumno" ToRole="Matricula" />
+        </EntityType>
+        <EntityType Name="Curso">
+          <Key>
+            <PropertyRef Name="IdCurso" />
+          </Key>
+          <Property Name="IdCurso" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CodigoCurso" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NombreCurso" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Creditos" Type="Int32" Nullable="false" />
+          <Property Name="Vacantes" Type="Int32" Nullable="false" />
+          <Property Name="Estado" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Matricula" Relationship="Self.FK_Matricula_Curso" FromRole="Curso" ToRole="Matricula" />
+        </EntityType>
+        <EntityType Name="Matricula">
+          <Key>
+            <PropertyRef Name="IdMatricula" />
+          </Key>
+          <Property Name="IdMatricula" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CodigoMatricula" Type="String" MaxLength="12" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="IdAlumno" Type="Int32" Nullable="false" />
+          <Property Name="IdCurso" Type="Int32" Nullable="false" />
+          <Property Name="FechaMatricula" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Estado" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Alumno" Relationship="Self.FK_Matricula_Alumno" FromRole="Matricula" ToRole="Alumno" />
+          <NavigationProperty Name="Curso" Relationship="Self.FK_Matricula_Curso" FromRole="Matricula" ToRole="Curso" />
+          <NavigationProperty Name="Retiro" Relationship="Self.FK_Retiro_Matricula" FromRole="Matricula" ToRole="Retiro" />
+        </EntityType>
+        <EntityType Name="Retiro">
+          <Key>
+            <PropertyRef Name="IdRetiro" />
+          </Key>
+          <Property Name="IdRetiro" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdMatricula" Type="Int32" Nullable="false" />
+          <Property Name="FechaRetiro" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Motivo" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Matricula" Relationship="Self.FK_Retiro_Matricula" FromRole="Retiro" ToRole="Matricula" />
+        </EntityType>
+        <Association Name="FK_Matricula_Alumno">
+          <End Role="Alumno" Type="Self.Alumno" Multiplicity="1" />
+          <End Role="Matricula" Type="Self.Matricula" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Alumno">
+              <PropertyRef Name="IdAlumno" />
+            </Principal>
+            <Dependent Role="Matricula">
+              <PropertyRef Name="IdAlumno" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Matricula_Curso">
+          <End Role="Curso" Type="Self.Curso" Multiplicity="1" />
+          <End Role="Matricula" Type="Self.Matricula" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Curso">
+              <PropertyRef Name="IdCurso" />
+            </Principal>
+            <Dependent Role="Matricula">
+              <PropertyRef Name="IdCurso" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Retiro_Matricula">
+          <End Role="Matricula" Type="Self.Matricula" Multiplicity="1" />
+          <End Role="Retiro" Type="Self.Retiro" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Matricula">
+              <PropertyRef Name="IdMatricula" />
+            </Principal>
+            <Dependent Role="Retiro">
+              <PropertyRef Name="IdMatricula" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SistemaMatriculaDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Alumno" EntityType="Self.Alumno" />
+          <EntitySet Name="Curso" EntityType="Self.Curso" />
+          <EntitySet Name="Matricula" EntityType="Self.Matricula" />
+          <EntitySet Name="Retiro" EntityType="Self.Retiro" />
+          <AssociationSet Name="FK_Matricula_Alumno" Association="Self.FK_Matricula_Alumno">
+            <End Role="Alumno" EntitySet="Alumno" />
+            <End Role="Matricula" EntitySet="Matricula" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Matricula_Curso" Association="Self.FK_Matricula_Curso">
+            <End Role="Curso" EntitySet="Curso" />
+            <End Role="Matricula" EntitySet="Matricula" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Retiro_Matricula" Association="Self.FK_Retiro_Matricula">
+            <End Role="Matricula" EntitySet="Matricula" />
+            <End Role="Retiro" EntitySet="Retiro" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SistemaMatriculaDBModelStoreContainer" CdmEntityContainer="SistemaMatriculaDBEntities">
+          <EntitySetMapping Name="Alumno">
+            <EntityTypeMapping TypeName="SistemaMatriculaDBModel.Alumno">
+              <MappingFragment StoreEntitySet="Alumno">
+                <ScalarProperty Name="IdAlumno" ColumnName="IdAlumno" />
+                <ScalarProperty Name="CodigoAlumno" ColumnName="CodigoAlumno" />
+                <ScalarProperty Name="Nombres" ColumnName="Nombres" />
+                <ScalarProperty Name="Apellidos" ColumnName="Apellidos" />
+                <ScalarProperty Name="DNI" ColumnName="DNI" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Curso">
+            <EntityTypeMapping TypeName="SistemaMatriculaDBModel.Curso">
+              <MappingFragment StoreEntitySet="Curso">
+                <ScalarProperty Name="IdCurso" ColumnName="IdCurso" />
+                <ScalarProperty Name="CodigoCurso" ColumnName="CodigoCurso" />
+                <ScalarProperty Name="NombreCurso" ColumnName="NombreCurso" />
+                <ScalarProperty Name="Creditos" ColumnName="Creditos" />
+                <ScalarProperty Name="Vacantes" ColumnName="Vacantes" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Matricula">
+            <EntityTypeMapping TypeName="SistemaMatriculaDBModel.Matricula">
+              <MappingFragment StoreEntitySet="Matricula">
+                <ScalarProperty Name="IdMatricula" ColumnName="IdMatricula" />
+                <ScalarProperty Name="CodigoMatricula" ColumnName="CodigoMatricula" />
+                <ScalarProperty Name="IdAlumno" ColumnName="IdAlumno" />
+                <ScalarProperty Name="IdCurso" ColumnName="IdCurso" />
+                <ScalarProperty Name="FechaMatricula" ColumnName="FechaMatricula" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Retiro">
+            <EntityTypeMapping TypeName="SistemaMatriculaDBModel.Retiro">
+              <MappingFragment StoreEntitySet="Retiro">
+                <ScalarProperty Name="IdRetiro" ColumnName="IdRetiro" />
+                <ScalarProperty Name="IdMatricula" ColumnName="IdMatricula" />
+                <ScalarProperty Name="FechaRetiro" ColumnName="FechaRetiro" />
+                <ScalarProperty Name="Motivo" ColumnName="Motivo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

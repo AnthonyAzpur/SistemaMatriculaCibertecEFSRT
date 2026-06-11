@@ -1,0 +1,58 @@
+﻿@model SistemaMatriculaCibertec.Models.Curso
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Curso</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CodigoCurso)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CodigoCurso)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NombreCurso)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NombreCurso)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Creditos)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Creditos)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Vacantes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Vacantes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Estado)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Estado)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.IdCurso }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
