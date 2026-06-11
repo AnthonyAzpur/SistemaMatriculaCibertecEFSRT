@@ -1,0 +1,42 @@
+﻿@model SistemaMatriculaCibertec.Models.Retiro
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Retiro</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaRetiro)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaRetiro)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Motivo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Motivo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Matricula.CodigoMatricula)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Matricula.CodigoMatricula)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.IdRetiro }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

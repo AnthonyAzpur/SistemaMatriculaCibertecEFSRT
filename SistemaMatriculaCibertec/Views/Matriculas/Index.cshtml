@@ -1,0 +1,57 @@
+﻿@model IEnumerable<SistemaMatriculaCibertec.Models.Matricula>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CodigoMatricula)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FechaMatricula)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Estado)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Alumno.CodigoAlumno)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Curso.CodigoCurso)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.CodigoMatricula)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FechaMatricula)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Estado)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Alumno.CodigoAlumno)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Curso.CodigoCurso)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.IdMatricula }) |
+            @Html.ActionLink("Details", "Details", new { id=item.IdMatricula }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.IdMatricula })
+        </td>
+    </tr>
+}
+
+</table>
