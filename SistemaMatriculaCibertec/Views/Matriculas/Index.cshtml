@@ -1,57 +1,275 @@
 ﻿@model IEnumerable<SistemaMatriculaCibertec.Models.Matricula>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Matrículas";
 }
 
-<h2>Index</h2>
+<style>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.CodigoMatricula)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FechaMatricula)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Estado)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Alumno.CodigoAlumno)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Curso.CodigoCurso)
-        </th>
-        <th></th>
-    </tr>
+    body {
+        background: #f4f7fb;
+    }
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.CodigoMatricula)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FechaMatricula)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Estado)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Alumno.CodigoAlumno)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Curso.CodigoCurso)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.IdMatricula }) |
-            @Html.ActionLink("Details", "Details", new { id=item.IdMatricula }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.IdMatricula })
-        </td>
-    </tr>
-}
+    .page-container {
+        padding: 20px;
+    }
 
-</table>
+    .card-custom {
+        background: white;
+        border-radius: 18px;
+        box-shadow: 0 3px 12px rgba(0,0,0,.08);
+        overflow: hidden;
+    }
+
+    .card-header-custom {
+        padding: 25px;
+        background: white;
+        border-bottom: 1px solid #eef2f7;
+    }
+
+    .card-body-custom {
+        padding: 20px;
+    }
+
+    .search-box {
+        margin-bottom: 20px;
+    }
+
+        .search-box input {
+            border-radius: 12px;
+            height: 48px;
+        }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+        .table thead {
+            background: #f8fafc;
+        }
+
+        .table th {
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+        }
+
+        .table td {
+            vertical-align: middle;
+        }
+
+    .badge-success-custom {
+        background: #d1fae5;
+        color: #065f46;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .btn-action {
+        width: 36px;
+        height: 36px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .pagination-custom {
+        padding: 15px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 5px;
+    }
+
+        .pagination-custom a {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            background: white;
+            color: #333;
+        }
+
+        .pagination-custom .active {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+</style>
+
+<div class="page-container">
+
+    <div class="card-custom">
+
+        <div class="card-header-custom">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h3 class="mb-1">
+                        Matrículas Registradas
+                    </h3>
+
+                    <small class="text-muted">
+                        @Model.Count() matrículas registradas
+                    </small>
+
+                </div>
+
+                <a href="@Url.Action("Create")"
+                   class="btn btn-primary">
+
+                    <i class="bi bi-plus-circle"></i>
+                    Nueva Matrícula
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="card-body-custom">
+
+            <div class="search-box">
+
+                <input type="text"
+                       id="txtBuscar"
+                       class="form-control"
+                       placeholder="Buscar matrícula..." />
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table table-hover"
+                       id="tablaMatriculas">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>CÓDIGO</th>
+                            <th>ALUMNO</th>
+                            <th>CURSO</th>
+                            <th>FECHA MATRÍCULA</th>
+                            <th>ESTADO</th>
+                            <th>ACCIONES</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    <strong class="text-primary">
+                                        @item.CodigoMatricula
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    @item.Alumno.CodigoAlumno
+                                </td>
+
+                                <td>
+                                    @item.Curso.CodigoCurso
+                                </td>
+
+                                <td>
+                                    @item.FechaMatricula.ToString("dd/MM/yyyy")
+                                </td>
+
+                                <td>
+
+                                    <span class="badge-success-custom">
+                                        @item.Estado
+                                    </span>
+
+                                </td>
+
+                                <td>
+
+                                    <a href="@Url.Action("Edit",
+                                    new { id = item.IdMatricula })"
+                                       class="btn btn-primary btn-sm btn-action">
+
+                                        <i class="bi bi-pencil"></i>
+
+                                    </a>
+
+                                    <a href="@Url.Action("Details",
+                                    new { id = item.IdMatricula })"
+                                       class="btn btn-info text-white btn-sm btn-action">
+
+                                        <i class="bi bi-eye"></i>
+
+                                    </a>
+
+                                    <a href="@Url.Action("Delete",
+                                    new { id = item.IdMatricula })"
+                                       class="btn btn-danger btn-sm btn-action">
+
+                                        <i class="bi bi-trash"></i>
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <div class="pagination-custom">
+
+            <a href="#">‹</a>
+            <a href="#" class="active">1</a>
+            <a href="#">›</a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    document.getElementById("txtBuscar")
+        .addEventListener("keyup", function () {
+
+            let filtro = this.value.toLowerCase();
+
+            let filas =
+                document.querySelectorAll("#tablaMatriculas tbody tr");
+
+            filas.forEach(function (fila) {
+
+                let texto = fila.innerText.toLowerCase();
+
+                fila.style.display =
+                    texto.includes(filtro)
+                        ? ""
+                        : "none";
+
+            });
+
+        });
+
+</script>
