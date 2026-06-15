@@ -1,42 +1,149 @@
 ﻿@model SistemaMatriculaCibertec.Models.Retiro
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Detalle de Retiro";
 }
 
-<h2>Details</h2>
+<style>
 
-<div>
-    <h4>Retiro</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.FechaRetiro)
-        </dt>
+    .page-container {
+        padding: 20px;
+    }
 
-        <dd>
-            @Html.DisplayFor(model => model.FechaRetiro)
-        </dd>
+    .card-custom {
+        background: white;
+        border-radius: 18px;
+        box-shadow: 0 3px 12px rgba(0,0,0,.08);
+        overflow: hidden;
+    }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Motivo)
-        </dt>
+    .card-header-custom {
+        padding: 25px;
+        border-bottom: 1px solid #eef2f7;
+    }
 
-        <dd>
-            @Html.DisplayFor(model => model.Motivo)
-        </dd>
+    .card-body-custom {
+        padding: 25px;
+    }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Matricula.CodigoMatricula)
-        </dt>
+    .info-box {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
 
-        <dd>
-            @Html.DisplayFor(model => model.Matricula.CodigoMatricula)
-        </dd>
+    .label-title {
+        font-size: 13px;
+        color: #64748b;
+        margin-bottom: 5px;
+    }
 
-    </dl>
+    .label-value {
+        font-size: 16px;
+        font-weight: 600;
+    }
+</style>
+
+<div class="page-container">
+
+    <div class="card-custom">
+
+        <div class="card-header-custom">
+
+            <h3 class="mb-1">
+                Detalle de Retiro
+            </h3>
+
+            <small class="text-muted">
+                Información completa del retiro
+            </small>
+
+        </div>
+
+        <div class="card-body-custom">
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <div class="info-box">
+
+                        <div class="label-title">
+                            Matrícula
+                        </div>
+
+                        <div class="label-value">
+
+                            @Html.DisplayFor(model => model.Matricula.CodigoMatricula)
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="info-box">
+
+                        <div class="label-title">
+                            Fecha de Retiro
+                        </div>
+
+                        <div class="label-value">
+
+                            @Convert.ToDateTime(Model.FechaRetiro).ToString("dd/MM/yyyy")
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="info-box">
+
+                        <div class="label-title">
+                            Motivo
+                        </div>
+
+                        <div class="label-value">
+
+                            @Html.DisplayFor(model => model.Motivo)
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <hr />
+
+            <a href="@Url.Action("Edit",
+               new { id = Model.IdRetiro })"
+               class="btn btn-primary">
+
+                <i class="bi bi-pencil"></i>
+
+                Editar
+
+            </a>
+
+            <a href="@Url.Action("Index")"
+               class="btn btn-secondary">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Volver
+
+            </a>
+
+        </div>
+
+    </div>
+
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.IdRetiro }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="SistemaMatriculaDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="SistemaMatriculaDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Alumno">
           <Key>
             <PropertyRef Name="IdAlumno" />
@@ -49,6 +49,7 @@
           <Property Name="IdMatricula" Type="int" Nullable="false" />
           <Property Name="FechaRetiro" Type="datetime" Nullable="false" />
           <Property Name="Motivo" Type="varchar" MaxLength="250" />
+          <Property Name="CodigoRetiro" Type="varchar" MaxLength="10" />
         </EntityType>
         <Association Name="FK_Matricula_Alumno">
           <End Role="Alumno" Type="Self.Alumno" Multiplicity="1" />
@@ -104,8 +105,7 @@
             <End Role="Retiro" EntitySet="Retiro" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SistemaMatriculaDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -159,6 +159,7 @@
           <Property Name="FechaRetiro" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Motivo" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Matricula" Relationship="Self.FK_Retiro_Matricula" FromRole="Retiro" ToRole="Matricula" />
+          <Property Name="CodigoRetiro" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_Matricula_Alumno">
           <End Role="Alumno" Type="Self.Alumno" Multiplicity="1" />
@@ -262,6 +263,7 @@
           <EntitySetMapping Name="Retiro">
             <EntityTypeMapping TypeName="SistemaMatriculaDBModel.Retiro">
               <MappingFragment StoreEntitySet="Retiro">
+                <ScalarProperty Name="CodigoRetiro" ColumnName="CodigoRetiro" />
                 <ScalarProperty Name="IdRetiro" ColumnName="IdRetiro" />
                 <ScalarProperty Name="IdMatricula" ColumnName="IdMatricula" />
                 <ScalarProperty Name="FechaRetiro" ColumnName="FechaRetiro" />

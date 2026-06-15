@@ -43,21 +43,34 @@ namespace SistemaMatriculaCibertec.Controllers
             return View();
         }
 
-        // POST: Retiroes/Create
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
-        // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "IdRetiro,IdMatricula,FechaRetiro,Motivo")] Retiro retiro)
+        public ActionResult Create([Bind(Include = "IdRetiro,CodigoRetiro,IdMatricula,FechaRetiro,Motivo")] Retiro retiro)
         {
             if (ModelState.IsValid)
             {
+                int ultimoId = 1;
+
+                if (db.Retiro.Any())
+                {
+                    ultimoId = db.Retiro.Max(r => r.IdRetiro) + 1;
+                }
+
+                retiro.CodigoRetiro = "RET-" + ultimoId.ToString("000");
+
                 db.Retiro.Add(retiro);
                 db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
 
-            ViewBag.IdMatricula = new SelectList(db.Matricula, "IdMatricula", "CodigoMatricula", retiro.IdMatricula);
+            ViewBag.IdMatricula = new SelectList(
+                db.Matricula,
+                "IdMatricula",
+                "CodigoMatricula",
+                retiro.IdMatricula);
+
             return View(retiro);
         }
 
@@ -77,12 +90,10 @@ namespace SistemaMatriculaCibertec.Controllers
             return View(retiro);
         }
 
-        // POST: Retiroes/Edit/5
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
-        // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IdRetiro,IdMatricula,FechaRetiro,Motivo")] Retiro retiro)
+        public ActionResult Edit([Bind(Include = "IdRetiro,CodigoRetiro,IdMatricula,FechaRetiro,Motivo")] Retiro retiro)
         {
             if (ModelState.IsValid)
             {
@@ -90,6 +101,7 @@ namespace SistemaMatriculaCibertec.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+
             ViewBag.IdMatricula = new SelectList(db.Matricula, "IdMatricula", "CodigoMatricula", retiro.IdMatricula);
             return View(retiro);
         }

@@ -18,6 +18,7 @@ namespace SistemaMatriculaCibertec.Models
         public int IdMatricula { get; set; }
         public System.DateTime FechaRetiro { get; set; }
         public string Motivo { get; set; }
+        public string CodigoRetiro { get; set; }
     
         public virtual Matricula Matricula { get; set; }
     }

@@ -1,0 +1,659 @@
+﻿@using SistemaMatriculaCibertec.Models
+
+@{
+    ViewBag.Title = "Consultas";
+    Alumno alumno = ViewBag.Alumno as Alumno;
+    List<Matricula> matriculas = ViewBag.Matriculas as List<Matricula>;
+    Curso curso = ViewBag.Curso as Curso;
+
+    List<Matricula> alumnosCurso =
+        ViewBag.AlumnosCurso as List<Matricula>;
+
+    Matricula matriculaSeleccionada =
+        ViewBag.Matricula as Matricula;
+
+    Retiro retiro =
+        ViewBag.Retiro as Retiro;
+}
+@{
+    string tipo = ViewBag.Tipo ?? "alumno";
+}
+
+<style>
+
+    body {
+        background: #eef3f8;
+    }
+
+    .consulta-card {
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,.08);
+    }
+
+    .tabs-consulta {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .tab-btn {
+        padding: 12px 20px;
+        border-radius: 10px;
+        border: 1px solid #dbe4f0;
+        background: white;
+        color: #23395d;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .tab-active {
+        background: #2f5bea;
+        color: white !important;
+    }
+
+    .search-box {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+        .search-box input {
+            height: 50px;
+            border-radius: 10px;
+        }
+
+        .search-box button {
+            height: 50px;
+            min-width: 120px;
+            border-radius: 10px;
+        }
+
+    .info-label {
+        color: #6c7a92;
+        font-size: 13px;
+        margin-bottom: 3px;
+    }
+
+    .info-value {
+        font-size: 16px;
+        font-weight: 600;
+        color: #23395d;
+    }
+
+    .estado-badge {
+        background: #d4f5df;
+        color: #0b7a3e;
+        padding: 6px 15px;
+        border-radius: 20px;
+        display: inline-block;
+        font-weight: 600;
+    }
+
+    .table thead {
+        background: #f4f7fb;
+    }
+
+        .table thead th {
+            border: none;
+            color: #5b6b82;
+            font-size: 13px;
+        }
+
+    .table td {
+        vertical-align: middle;
+    }
+
+    .titulo-modulo {
+        color: #23395d;
+        font-weight: 700;
+    }
+
+    .subtitulo {
+        color: #6c7a92;
+    }
+
+    .mt-3 {
+        margin-top: 15px;
+    }
+
+    .text-muted {
+        color: #6c7a92;
+        font-size: 13px;
+    }
+</style>
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+
+        <h2 class="titulo-modulo">
+            Módulo de Consultas
+        </h2>
+
+        <p class="subtitulo">
+            Consulte información detallada por alumno, curso, matrícula o retiro
+        </p>
+
+    </div>
+
+    <div class="tabs-consulta">
+
+        <a href="@Url.Action("Index","Consultas",new{tipo="alumno"})"
+           class="tab-btn @(tipo=="alumno"?"tab-active":"")">
+
+            👤 Por Alumno
+
+        </a>
+
+        <a href="@Url.Action("Index","Consultas",new{tipo="curso"})"
+           class="tab-btn @(tipo=="curso"?"tab-active":"")">
+
+            📚 Por Curso
+
+        </a>
+
+        <a href="@Url.Action("Index","Consultas",new{tipo="matricula"})"
+           class="tab-btn @(tipo=="matricula"?"tab-active":"")">
+
+            📋 Por Matrícula
+
+        </a>
+
+        <a href="@Url.Action("Index","Consultas",new{tipo="retiro"})"
+           class="tab-btn @(tipo=="retiro"?"tab-active":"")">
+
+            ↩️ Por Retiro
+
+        </a>
+
+    </div>
+
+    <div class="consulta-card">
+
+        <form method="get">
+
+            <input type="hidden"
+                   name="tipo"
+                   value="@tipo" />
+
+            <div class="search-box">
+
+                <input type="text"
+                       name="codigo"
+                       value="@ViewBag.CodigoBuscado"
+                       class="form-control"
+                       placeholder="@(tipo=="alumno" ? "AL001" :
+                                 tipo=="curso" ? "CUR001" :
+                                 tipo=="matricula" ? "MAT001" :
+                                 "MAT001")" />
+
+                <button type="submit"
+                        class="btn btn-primary">
+
+                    Buscar
+
+                </button>
+
+            </div>
+
+        </form>
+
+        <div class="mt-3">
+
+            @if (tipo == "alumno")
+            {
+                <small class="text-muted">
+                    Buscar por código de alumno.<br />
+                    Ejemplos: AL001 | AL002 | AL003
+                </small>
+            }
+
+            @if (tipo == "curso")
+            {
+                <small class="text-muted">
+                    Buscar por código de curso.<br />
+                    Ejemplos: CUR001 | CUR002 | CUR003
+                </small>
+            }
+
+            @if (tipo == "matricula")
+            {
+                <small class="text-muted">
+                    Buscar por código de matrícula.<br />
+                    Ejemplos: MAT001 | MAT002 | MAT003
+                </small>
+            }
+
+            @if (tipo == "retiro")
+            {
+                <small class="text-muted">
+                    Buscar por matrícula retirada.<br />
+                    Ejemplos: RET-001 | RET-002 | RET-003
+                </small>
+            }
+
+        </div>
+
+    </div>
+
+    @if (!String.IsNullOrEmpty(ViewBag.Mensaje))
+    {
+        <div class="alert alert-info">
+            @ViewBag.Mensaje
+        </div>
+    }
+
+    @if (alumno != null)
+    {
+
+        <div class="consulta-card">
+
+            <h3>
+                Información del Alumno
+            </h3>
+
+            <hr />
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <div class="info-label">
+                        Código
+                    </div>
+
+                    <div class="info-value">
+                        @alumno.CodigoAlumno
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="info-label">
+                        Nombre completo
+                    </div>
+
+                    <div class="info-value">
+                        @alumno.Nombres @alumno.Apellidos
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="info-label">
+                        DNI
+                    </div>
+
+                    <div class="info-value">
+                        @alumno.DNI
+                    </div>
+
+                </div>
+
+            </div>
+
+            <br />
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <div class="info-label">
+                        Correo
+                    </div>
+
+                    <div class="info-value">
+                        @alumno.Correo
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="info-label">
+                        Teléfono
+                    </div>
+
+                    <div class="info-value">
+                        @alumno.Telefono
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="info-label">
+                        Estado
+                    </div>
+
+                    <span class="estado-badge">
+                        @alumno.Estado
+                    </span>
+
+                </div>
+
+            </div>
+
+            <br />
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <div class="info-label">
+                        Fecha Registro
+                    </div>
+
+                    <div class="info-value">
+                        @alumno.FechaRegistro
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    }
+
+    @if (matriculas != null && matriculas.Count > 0)
+    {
+
+        <div class="consulta-card">
+
+            <h3>
+                Matrículas Registradas
+            </h3>
+
+            <hr />
+
+            <table class="table table-hover">
+
+                <thead>
+
+                    <tr>
+
+                        <th>CÓDIGO MATRÍCULA</th>
+                        <th>CURSO</th>
+                        <th>FECHA MATRÍCULA</th>
+                        <th>ESTADO</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in matriculas)
+                    {
+                        <tr>
+
+                            <td>
+                                @item.CodigoMatricula
+                            </td>
+
+                            <td>
+                                @(item.Curso != null ? item.Curso.NombreCurso : "")
+                            </td>
+
+                            <td>
+                                @item.FechaMatricula
+                            </td>
+
+                            <td>
+
+                                <span class="estado-badge">
+                                    @item.Estado
+                                </span>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    }
+    @if (curso != null)
+    {
+        <div class="consulta-card">
+
+            <h3>Información del Curso</h3>
+
+            <hr />
+
+            <div class="row">
+
+                <div class="col-md-3">
+                    <div class="info-label">Código</div>
+                    <div class="info-value">@curso.CodigoCurso</div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="info-label">Curso</div>
+                    <div class="info-value">@curso.NombreCurso</div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="info-label">Créditos</div>
+                    <div class="info-value">@curso.Creditos</div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="info-label">Vacantes</div>
+                    <div class="info-value">@curso.Vacantes</div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="info-label">Estado</div>
+
+                    <span class="estado-badge">
+                        @curso.Estado
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+    @if (alumnosCurso != null && alumnosCurso.Count > 0)
+    {
+        <div class="consulta-card">
+
+            <h3>Alumnos Matriculados</h3>
+
+            <hr />
+
+            <table class="table table-hover">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Código Alumno</th>
+                        <th>Alumno</th>
+                        <th>Matrícula</th>
+                        <th>Estado</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in alumnosCurso)
+                    {
+                        <tr>
+
+                            <td>
+                                @item.Alumno.CodigoAlumno
+                            </td>
+
+                            <td>
+                                @item.Alumno.Nombres
+                                @item.Alumno.Apellidos
+                            </td>
+
+                            <td>
+                                @item.CodigoMatricula
+                            </td>
+
+                            <td>
+                                @item.Estado
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+    }
+
+    @if (matriculaSeleccionada != null)
+    {
+        <div class="consulta-card">
+
+            <h3>Información de Matrícula</h3>
+
+            <hr />
+
+            <div class="row">
+
+                <div class="col-md-3">
+
+                    <div class="info-label">
+                        Código Matrícula
+                    </div>
+
+                    <div class="info-value">
+                        @matriculaSeleccionada.CodigoMatricula
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <div class="info-label">
+                        Alumno
+                    </div>
+
+                    <div class="info-value">
+                        @matriculaSeleccionada.Alumno.Nombres
+                        @matriculaSeleccionada.Alumno.Apellidos
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <div class="info-label">
+                        Curso
+                    </div>
+
+                    <div class="info-value">
+                        @matriculaSeleccionada.Curso.NombreCurso
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <div class="info-label">
+                        Estado
+                    </div>
+
+                    <span class="estado-badge">
+                        @matriculaSeleccionada.Estado
+                    </span>
+
+                </div>
+
+            </div>
+
+            <br />
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <div class="info-label">
+                        Fecha Matrícula
+                    </div>
+
+                    <div class="info-value">
+                        @matriculaSeleccionada.FechaMatricula
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+    @if (retiro != null)
+    {
+        <div class="consulta-card">
+
+            <h3>Información de Retiro</h3>
+
+            <hr />
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <div class="info-label">
+                        Matrícula
+                    </div>
+
+                    <div class="info-value">
+                        @retiro.Matricula.CodigoMatricula
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="info-label">
+                        Fecha Retiro
+                    </div>
+
+                    <div class="info-value">
+                        @retiro.FechaRetiro
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="info-label">
+                        Motivo
+                    </div>
+
+                    <div class="info-value">
+                        @retiro.Motivo
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+</div>

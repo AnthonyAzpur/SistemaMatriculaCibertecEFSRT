@@ -1,56 +1,164 @@
 ﻿@model SistemaMatriculaCibertec.Models.Retiro
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Editar Retiro";
 }
 
-<h2>Edit</h2>
+<style>
 
+    .page-container {
+        padding: 20px;
+    }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Retiro</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.IdRetiro)
+    .card-custom {
+        background: white;
+        border-radius: 18px;
+        box-shadow: 0 3px 12px rgba(0,0,0,.08);
+        overflow: hidden;
+    }
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.IdMatricula, "IdMatricula", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("IdMatricula", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.IdMatricula, "", new { @class = "text-danger" })
-            </div>
+    .card-header-custom {
+        padding: 25px;
+        border-bottom: 1px solid #eef2f7;
+    }
+
+    .card-body-custom {
+        padding: 25px;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        height: 45px;
+    }
+
+    textarea.form-control {
+        height: 100px;
+    }
+</style>
+
+<div class="page-container">
+
+    <div class="card-custom">
+
+        <div class="card-header-custom">
+
+            <h3 class="mb-1">
+                Editar Retiro
+            </h3>
+
+            <small class="text-muted">
+                Modificación de datos del retiro
+            </small>
+
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.FechaRetiro, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.FechaRetiro, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.FechaRetiro, "", new { @class = "text-danger" })
-            </div>
+        <div class="card-body-custom">
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.HiddenFor(model => model.IdRetiro)
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>
+                            Matrícula
+                        </label>
+
+                        @Html.DropDownList(
+                            "IdMatricula",
+                            null,
+                            new { @class = "form-control" }
+                        )
+
+                        @Html.ValidationMessageFor(
+                            model => model.IdMatricula,
+                            "",
+                            new { @class = "text-danger" }
+                        )
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>
+                            Fecha de Retiro
+                        </label>
+
+                        @Html.EditorFor(
+                            model => model.FechaRetiro,
+                            new
+                            {
+                                htmlAttributes = new
+                                {
+                                    @class = "form-control",
+                                    type = "date"
+                                }
+                            })
+
+                        @Html.ValidationMessageFor(
+                            model => model.FechaRetiro,
+                            "",
+                            new { @class = "text-danger" }
+                        )
+
+                    </div>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>
+                        Motivo del Retiro
+                    </label>
+
+                    @Html.TextAreaFor(
+                        model => model.Motivo,
+                        new
+                        {
+                            @class = "form-control",
+                            rows = "4"
+                        })
+
+                    @Html.ValidationMessageFor(
+                        model => model.Motivo,
+                        "",
+                        new { @class = "text-danger" }
+                    )
+
+                </div>
+
+                <hr />
+
+                <button type="submit"
+                        class="btn btn-primary">
+
+                    <i class="bi bi-save"></i>
+
+                    Guardar Cambios
+
+                </button>
+
+                <a href="@Url.Action("Index")"
+                   class="btn btn-secondary">
+
+                    <i class="bi bi-arrow-left"></i>
+
+                    Volver
+
+                </a>
+
+            }
+
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Motivo, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Motivo, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Motivo, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
     </div>
-}
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
 
 @section Scripts {
