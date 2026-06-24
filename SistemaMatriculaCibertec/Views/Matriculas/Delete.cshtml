@@ -1,64 +1,39 @@
-﻿@model SistemaMatriculaCibertec.Models.Matricula
+﻿@model SistemaMatriculaCibertec.Models.Curso
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Eliminar Curso";
 }
 
-<h2>Delete</h2>
+<div class="page-container">
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Matricula</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.CodigoMatricula)
-        </dt>
+    <div class="card-custom">
 
-        <dd>
-            @Html.DisplayFor(model => model.CodigoMatricula)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.FechaMatricula)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.FechaMatricula)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Estado)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Estado)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Alumno.CodigoAlumno)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Alumno.CodigoAlumno)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Curso.CodigoCurso)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Curso.CodigoCurso)
-        </dd>
-
-    </dl>
-
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+        <div class="card-header-custom">
+            <h3 class="mb-1 text-danger">Eliminar Curso</h3>
+            <small>¿Estás seguro?</small>
         </div>
-    }
+
+        <div class="card-body-custom">
+
+            <p><strong>Código:</strong> @Model.CodigoCurso</p>
+            <p><strong>Nombre:</strong> @Model.NombreCurso</p>
+            <p><strong>Créditos:</strong> @Model.Creditos</p>
+            <p><strong>Vacantes:</strong> @Model.Vacantes</p>
+            <p><strong>Estado:</strong> @Model.Estado</p>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <button type="submit" class="btn btn-danger">
+                    Eliminar
+                </button>
+
+                <a href="@Url.Action("Index")" class="btn btn-secondary">
+                    Cancelar
+                </a>
+            }
+
+        </div>
+    </div>
 </div>

@@ -1,9 +1,8 @@
 ﻿using SistemaMatriculaCibertec.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using System.Data.Entity;
 
 namespace SistemaMatriculaCibertec.Controllers
 {
@@ -17,7 +16,15 @@ namespace SistemaMatriculaCibertec.Controllers
             ViewBag.Tipo = tipo;
             ViewBag.CodigoBuscado = codigo;
 
-            if (!string.IsNullOrEmpty(codigo))
+            ViewBag.Alumno = null;
+            ViewBag.Curso = null;
+            ViewBag.Matricula = null;
+            ViewBag.Retiro = null;
+
+            ViewBag.Matriculas = null;
+            ViewBag.AlumnosCurso = null;
+
+            if (!string.IsNullOrWhiteSpace(codigo))
             {
                 switch (tipo.ToLower())
                 {
@@ -31,7 +38,7 @@ namespace SistemaMatriculaCibertec.Controllers
                         if (alumno != null)
                         {
                             ViewBag.Matriculas = db.Matricula
-                                .Include("Curso")
+                                .Include(m => m.Curso)
                                 .Where(m => m.IdAlumno == alumno.IdAlumno)
                                 .ToList();
                         }
@@ -48,7 +55,7 @@ namespace SistemaMatriculaCibertec.Controllers
                         if (curso != null)
                         {
                             ViewBag.AlumnosCurso = db.Matricula
-                                .Include("Alumno")
+                                .Include(m => m.Alumno)
                                 .Where(m => m.IdCurso == curso.IdCurso)
                                 .ToList();
                         }
@@ -58,8 +65,8 @@ namespace SistemaMatriculaCibertec.Controllers
                     case "matricula":
 
                         var matricula = db.Matricula
-                            .Include("Alumno")
-                            .Include("Curso")
+                            .Include(m => m.Alumno)
+                            .Include(m => m.Curso)
                             .FirstOrDefault(m => m.CodigoMatricula == codigo);
 
                         ViewBag.Matricula = matricula;
@@ -69,7 +76,7 @@ namespace SistemaMatriculaCibertec.Controllers
                     case "retiro":
 
                         var retiro = db.Retiro
-                            .Include("Matricula")
+                            .Include(r => r.Matricula)
                             .FirstOrDefault(r => r.CodigoRetiro == codigo);
 
                         ViewBag.Retiro = retiro;

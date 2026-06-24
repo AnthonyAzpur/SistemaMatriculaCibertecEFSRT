@@ -1,58 +1,110 @@
 ﻿@model SistemaMatriculaCibertec.Models.Curso
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Detalle Curso";
 }
 
-<h2>Details</h2>
+<style>
+    .page-container {
+        padding: 20px;
+    }
 
-<div>
-    <h4>Curso</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.CodigoCurso)
-        </dt>
+    .card-custom {
+        background: white;
+        border-radius: 18px;
+        box-shadow: 0 3px 12px rgba(0,0,0,.08);
+        overflow: hidden;
+    }
 
-        <dd>
-            @Html.DisplayFor(model => model.CodigoCurso)
-        </dd>
+    .card-header-custom {
+        padding: 25px;
+        border-bottom: 1px solid #eef2f7;
+    }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.NombreCurso)
-        </dt>
+    .card-body-custom {
+        padding: 25px;
+    }
 
-        <dd>
-            @Html.DisplayFor(model => model.NombreCurso)
-        </dd>
+    .info-box {
+        background: #f8fafc;
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+    }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Creditos)
-        </dt>
+    .label-title {
+        font-weight: 600;
+        color: #64748b;
+        font-size: 13px;
+    }
 
-        <dd>
-            @Html.DisplayFor(model => model.Creditos)
-        </dd>
+    .value-text {
+        font-size: 15px;
+        color: #0f172a;
+        font-weight: 500;
+    }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Vacantes)
-        </dt>
+    .btn-group-custom {
+        margin-top: 15px;
+        display: flex;
+        gap: 10px;
+    }
+</style>
 
-        <dd>
-            @Html.DisplayFor(model => model.Vacantes)
-        </dd>
+<div class="page-container">
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Estado)
-        </dt>
+    <div class="card-custom">
 
-        <dd>
-            @Html.DisplayFor(model => model.Estado)
-        </dd>
+        <div class="card-header-custom">
+            <h3 class="mb-1">Detalle del Curso</h3>
+            <small class="text-muted">Información completa del curso seleccionado</small>
+        </div>
 
-    </dl>
+        <div class="card-body-custom">
+
+            <div class="info-box">
+                <div class="label-title">Código del Curso</div>
+                <div class="value-text">@Model.CodigoCurso</div>
+            </div>
+
+            <div class="info-box">
+                <div class="label-title">Nombre del Curso</div>
+                <div class="value-text">@Model.NombreCurso</div>
+            </div>
+
+            <div class="info-box">
+                <div class="label-title">Créditos</div>
+                <div class="value-text">@Model.Creditos</div>
+            </div>
+
+            <div class="info-box">
+                <div class="label-title">Vacantes</div>
+                <div class="value-text">@Model.Vacantes</div>
+            </div>
+
+            <div class="info-box">
+                <div class="label-title">Estado</div>
+                <div class="value-text">@Model.Estado</div>
+            </div>
+
+            <hr />
+
+            <div class="btn-group-custom">
+
+                <a href="@Url.Action("Edit", new { id = Model.IdCurso })"
+                   class="btn btn-primary">
+                    Editar
+                </a>
+
+                <a href="@Url.Action("Index")"
+                   class="btn btn-secondary">
+                    Volver
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.IdCurso }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

@@ -1,64 +1,99 @@
 ﻿@model SistemaMatriculaCibertec.Models.Curso
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Nuevo Curso";
 }
 
-<h2>Delete</h2>
-
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Curso</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.CodigoCurso)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CodigoCurso)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.NombreCurso)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.NombreCurso)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Creditos)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Creditos)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Vacantes)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Vacantes)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Estado)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Estado)
-        </dd>
-
-    </dl>
-
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
+<style>
+    .page-container {
+        padding: 20px;
     }
+
+    .card-custom {
+        background: white;
+        border-radius: 18px;
+        box-shadow: 0 3px 12px rgba(0,0,0,.08);
+        overflow: hidden;
+    }
+
+    .card-header-custom {
+        padding: 25px;
+        border-bottom: 1px solid #eef2f7;
+    }
+
+    .card-body-custom {
+        padding: 25px;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        height: 45px;
+    }
+
+    .btn-guardar {
+        min-width: 140px;
+    }
+</style>
+
+<div class="page-container">
+
+    <div class="card-custom">
+
+        <div class="card-header-custom">
+            <h3 class="mb-1">Nuevo Curso</h3>
+            <small class="text-muted">Registrar curso académico</small>
+        </div>
+
+        <div class="card-body-custom">
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="mb-3">
+                    <label>Código del Curso</label>
+                    @Html.EditorFor(m => m.CodigoCurso, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(m => m.CodigoCurso, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="mb-3">
+                    <label>Nombre del Curso</label>
+                    @Html.EditorFor(m => m.NombreCurso, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(m => m.NombreCurso, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-4 mb-3">
+                        <label>Créditos</label>
+                        @Html.EditorFor(m => m.Creditos, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label>Vacantes</label>
+                        @Html.EditorFor(m => m.Vacantes, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label>Estado</label>
+                        @Html.EditorFor(m => m.Estado, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+
+                </div>
+
+                <hr />
+
+                <button type="submit" class="btn btn-danger btn-guardar">
+                    Eliminar
+                </button>
+
+                <a href="@Url.Action("Index")" class="btn btn-secondary">
+                    Volver
+                </a>
+            }
+
+        </div>
+    </div>
 </div>

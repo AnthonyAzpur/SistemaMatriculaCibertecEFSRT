@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -21,22 +20,21 @@ namespace SistemaMatriculaCibertec.Controllers
             return View(matricula.ToList());
         }
 
-        // GET: Matriculas/Details/5
+        // GET: Details
         public ActionResult Details(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+
             Matricula matricula = db.Matricula.Find(id);
+
             if (matricula == null)
-            {
                 return HttpNotFound();
-            }
+
             return View(matricula);
         }
 
-        // GET: Matriculas/Create
+        // GET: Create
         public ActionResult Create()
         {
             ViewBag.IdAlumno = new SelectList(db.Alumno, "IdAlumno", "CodigoAlumno");
@@ -44,92 +42,156 @@ namespace SistemaMatriculaCibertec.Controllers
             return View();
         }
 
-        // POST: Matriculas/Create
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
-        // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "IdMatricula,CodigoMatricula,IdAlumno,IdCurso,FechaMatricula,Estado")] Matricula matricula)
+        public ActionResult Create(Matricula matricula)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Matricula.Add(matricula);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (matricula.IdAlumno == 0 || matricula.IdCurso == 0)
+                {
+                    TempData["Error"] = "Debe seleccionar alumno y curso";
+                    return RedirectToAction("Create");
+                }
+
+                if (ModelState.IsValid)
+                {
+                    int ultimoId = db.Matricula.Any()
+                        ? db.Matricula.Max(m => m.IdMatricula) + 1
+                        : 1;
+
+                    matricula.CodigoMatricula = "MAT-" + ultimoId.ToString("000");
+
+                    db.Matricula.Add(matricula);
+                    db.SaveChanges();
+
+                    TempData["Success"] = "Matrícula registrada correctamente";
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al registrar matrícula: " + ex.Message;
             }
 
             ViewBag.IdAlumno = new SelectList(db.Alumno, "IdAlumno", "CodigoAlumno", matricula.IdAlumno);
             ViewBag.IdCurso = new SelectList(db.Curso, "IdCurso", "CodigoCurso", matricula.IdCurso);
+
             return View(matricula);
         }
 
-        // GET: Matriculas/Edit/5
+        // GET: Edit
         public ActionResult Edit(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+
             Matricula matricula = db.Matricula.Find(id);
+
             if (matricula == null)
-            {
                 return HttpNotFound();
-            }
+
             ViewBag.IdAlumno = new SelectList(db.Alumno, "IdAlumno", "CodigoAlumno", matricula.IdAlumno);
             ViewBag.IdCurso = new SelectList(db.Curso, "IdCurso", "CodigoCurso", matricula.IdCurso);
+
             return View(matricula);
         }
 
-        // POST: Matriculas/Edit/5
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
-        // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IdMatricula,CodigoMatricula,IdAlumno,IdCurso,FechaMatricula,Estado")] Matricula matricula)
+        public ActionResult Edit(Matricula matricula)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(matricula).State = EntityState.Modified;
+                var matDB = db.Matricula.Find(matricula.IdMatricula);
+
+                if (matDB == null)
+                {
+                    TempData["Error"] = "Matrícula no encontrada";
+                    return RedirectToAction("Index");
+                }
+
+                if (matricula.IdAlumno == 0 || matricula.IdCurso == 0)
+                {
+                    TempData["Error"] = "Debe seleccionar alumno y curso";
+                    return RedirectToAction("Index");
+                }
+
+                matDB.IdAlumno = matricula.IdAlumno;
+                matDB.IdCurso = matricula.IdCurso;
+                matDB.FechaMatricula = matricula.FechaMatricula;
+                matDB.Estado = matricula.Estado;
+
                 db.SaveChanges();
-                return RedirectToAction("Index");
+
+                TempData["Success"] = "Matrícula actualizada correctamente";
             }
-            ViewBag.IdAlumno = new SelectList(db.Alumno, "IdAlumno", "CodigoAlumno", matricula.IdAlumno);
-            ViewBag.IdCurso = new SelectList(db.Curso, "IdCurso", "CodigoCurso", matricula.IdCurso);
-            return View(matricula);
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al actualizar: " + ex.Message;
+            }
+
+            return RedirectToAction("Index");
         }
 
-        // GET: Matriculas/Delete/5
+        // GET: Delete
         public ActionResult Delete(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+
             Matricula matricula = db.Matricula.Find(id);
+
             if (matricula == null)
-            {
                 return HttpNotFound();
-            }
+
             return View(matricula);
         }
 
-        // POST: Matriculas/Delete/5
+        // POST: Delete
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Matricula matricula = db.Matricula.Find(id);
-            db.Matricula.Remove(matricula);
-            db.SaveChanges();
+            try
+            {
+                Matricula matricula = db.Matricula.Find(id);
+
+                if (matricula == null)
+                {
+                    TempData["Error"] = "Matrícula no encontrada";
+                    return RedirectToAction("Index");
+                }
+
+                // 🔥 VALIDACIÓN: evitar borrar si tiene retiro
+                bool tieneRetiro = db.Retiro.Any(r => r.IdMatricula == id);
+
+                if (tieneRetiro)
+                {
+                    TempData["Error"] = "No se puede eliminar: la matrícula tiene un retiro asociado";
+                    return RedirectToAction("Index");
+                }
+
+                db.Matricula.Remove(matricula);
+                db.SaveChanges();
+
+                TempData["Success"] = "Matrícula eliminada correctamente";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al eliminar: " + ex.Message;
+            }
+
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
                 db.Dispose();
-            }
+
             base.Dispose(disposing);
         }
     }

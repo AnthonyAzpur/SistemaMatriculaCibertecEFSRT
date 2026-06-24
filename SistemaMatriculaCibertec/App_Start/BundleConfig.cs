@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Web.Optimization;
+using System.Web.UI;
 
 namespace SistemaMatriculaCibertec
 {
@@ -24,6 +25,7 @@ namespace SistemaMatriculaCibertec
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
+                      "~/Content/StyleSheet1.css", 
                       "~/Content/site.css"));
         }
     }

@@ -1,74 +1,59 @@
-﻿@model SistemaMatriculaCibertec.Models.Matricula
+﻿@model SistemaMatriculaCibertec.Models.Curso
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Editar Curso";
 }
 
-<h2>Edit</h2>
+<div class="page-container">
 
+    <div class="card-custom">
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Matricula</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.IdMatricula)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CodigoMatricula, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CodigoMatricula, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CodigoMatricula, "", new { @class = "text-danger" })
-            </div>
+        <div class="card-header-custom">
+            <h3 class="mb-1">Editar Curso</h3>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.IdAlumno, "IdAlumno", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("IdAlumno", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.IdAlumno, "", new { @class = "text-danger" })
-            </div>
-        </div>
+        <div class="card-body-custom">
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.IdCurso, "IdCurso", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("IdCurso", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.IdCurso, "", new { @class = "text-danger" })
-            </div>
-        </div>
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.IdCurso)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.FechaMatricula, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.FechaMatricula, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.FechaMatricula, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="row">
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Estado, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Estado, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Código</label>
+                        @Html.EditorFor(m => m.CodigoCurso, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Nombre</label>
+                        @Html.EditorFor(m => m.NombreCurso, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label>Créditos</label>
+                        @Html.EditorFor(m => m.Creditos, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label>Vacantes</label>
+                        @Html.EditorFor(m => m.Vacantes, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label>Estado</label>
+                        @Html.EditorFor(m => m.Estado, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+
+                </div>
+
+                <hr />
+
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a href="@Url.Action("Index")" class="btn btn-secondary">Volver</a>
+            }
+
         </div>
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}

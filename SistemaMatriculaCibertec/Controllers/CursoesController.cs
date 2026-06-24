@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using SistemaMatriculaCibertec.Models;
 
@@ -14,113 +11,164 @@ namespace SistemaMatriculaCibertec.Controllers
     {
         private SistemaMatriculaDBEntities db = new SistemaMatriculaDBEntities();
 
-        // GET: Cursoes
         public ActionResult Index()
         {
             return View(db.Curso.ToList());
         }
 
-        // GET: Cursoes/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+
             Curso curso = db.Curso.Find(id);
+
             if (curso == null)
-            {
                 return HttpNotFound();
-            }
+
             return View(curso);
         }
 
-        // GET: Cursoes/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Cursoes/Create
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
-        // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "IdCurso,CodigoCurso,NombreCurso,Creditos,Vacantes,Estado")] Curso curso)
+        public ActionResult Create(Curso curso)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Curso.Add(curso);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (curso == null)
+                    return View(curso);
+
+                // VALIDACIONES
+                if (string.IsNullOrWhiteSpace(curso.CodigoCurso))
+                    ModelState.AddModelError("CodigoCurso", "El código es obligatorio");
+
+                if (string.IsNullOrWhiteSpace(curso.NombreCurso))
+                    ModelState.AddModelError("NombreCurso", "El nombre es obligatorio");
+
+                if (curso.Creditos <= 0)
+                    ModelState.AddModelError("Creditos", "Créditos deben ser mayores a 0");
+
+                if (curso.Vacantes <= 0)
+                    ModelState.AddModelError("Vacantes", "Vacantes deben ser mayores a 0");
+
+                // DUPLICADO
+                bool existe = db.Curso.Any(x => x.CodigoCurso == curso.CodigoCurso);
+                if (existe)
+                    ModelState.AddModelError("CodigoCurso", "Ya existe este código");
+
+                if (ModelState.IsValid)
+                {
+                    db.Curso.Add(curso);
+                    db.SaveChanges();
+
+                    TempData["Success"] = "Curso registrado correctamente";
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Error: " + ex.Message);
             }
 
             return View(curso);
         }
 
-        // GET: Cursoes/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+
             Curso curso = db.Curso.Find(id);
+
             if (curso == null)
-            {
                 return HttpNotFound();
-            }
+
             return View(curso);
         }
 
-        // POST: Cursoes/Edit/5
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
-        // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IdCurso,CodigoCurso,NombreCurso,Creditos,Vacantes,Estado")] Curso curso)
+        public ActionResult Edit(Curso curso)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(curso).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (curso == null)
+                    return View(curso);
+
+                if (curso.Creditos <= 0)
+                    ModelState.AddModelError("Creditos", "Créditos inválidos");
+
+                if (curso.Vacantes <= 0)
+                    ModelState.AddModelError("Vacantes", "Vacantes inválidas");
+
+                bool existe = db.Curso.Any(x =>
+                    x.CodigoCurso == curso.CodigoCurso &&
+                    x.IdCurso != curso.IdCurso);
+
+                if (existe)
+                    ModelState.AddModelError("CodigoCurso", "Código ya usado");
+
+                if (ModelState.IsValid)
+                {
+                    db.Entry(curso).State = EntityState.Modified;
+                    db.SaveChanges();
+
+                    TempData["Success"] = "Curso actualizado correctamente";
+                    return RedirectToAction("Index");
+                }
             }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Error: " + ex.Message);
+            }
+
             return View(curso);
         }
 
-        // GET: Cursoes/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+
             Curso curso = db.Curso.Find(id);
+
             if (curso == null)
-            {
                 return HttpNotFound();
-            }
+
             return View(curso);
         }
 
-        // POST: Cursoes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Curso curso = db.Curso.Find(id);
-            db.Curso.Remove(curso);
-            db.SaveChanges();
+            try
+            {
+                Curso curso = db.Curso.Find(id);
+
+                db.Curso.Remove(curso);
+                db.SaveChanges();
+
+                TempData["Success"] = "Curso eliminado correctamente";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error: " + ex.Message;
+            }
+
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
                 db.Dispose();
-            }
+
             base.Dispose(disposing);
         }
     }

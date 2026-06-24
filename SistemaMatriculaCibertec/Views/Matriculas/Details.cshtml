@@ -1,58 +1,33 @@
-﻿@model SistemaMatriculaCibertec.Models.Matricula
+﻿@model SistemaMatriculaCibertec.Models.Curso
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Detalle Curso";
 }
 
-<h2>Details</h2>
+<div class="page-container">
 
-<div>
-    <h4>Matricula</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.CodigoMatricula)
-        </dt>
+    <div class="card-custom">
 
-        <dd>
-            @Html.DisplayFor(model => model.CodigoMatricula)
-        </dd>
+        <div class="card-header-custom">
+            <h3>Detalle Curso</h3>
+        </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FechaMatricula)
-        </dt>
+        <div class="card-body-custom">
 
-        <dd>
-            @Html.DisplayFor(model => model.FechaMatricula)
-        </dd>
+            <p><strong>Código:</strong> @Model.CodigoCurso</p>
+            <p><strong>Nombre:</strong> @Model.NombreCurso</p>
+            <p><strong>Créditos:</strong> @Model.Creditos</p>
+            <p><strong>Vacantes:</strong> @Model.Vacantes</p>
+            <p><strong>Estado:</strong> @Model.Estado</p>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Estado)
-        </dt>
+            <a href="@Url.Action("Edit", new { id = Model.IdCurso })" class="btn btn-primary">
+                Editar
+            </a>
 
-        <dd>
-            @Html.DisplayFor(model => model.Estado)
-        </dd>
+            <a href="@Url.Action("Index")" class="btn btn-secondary">
+                Volver
+            </a>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Alumno.CodigoAlumno)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Alumno.CodigoAlumno)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Curso.CodigoCurso)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Curso.CodigoCurso)
-        </dd>
-
-    </dl>
+        </div>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.IdMatricula }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

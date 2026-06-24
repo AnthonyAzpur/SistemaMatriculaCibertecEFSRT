@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using SistemaMatriculaCibertec.Models;
 
@@ -14,130 +11,146 @@ namespace SistemaMatriculaCibertec.Controllers
     {
         private SistemaMatriculaDBEntities db = new SistemaMatriculaDBEntities();
 
-        // GET: Retiroes
+        // GET: Index
         public ActionResult Index()
         {
             var retiro = db.Retiro.Include(r => r.Matricula);
             return View(retiro.ToList());
         }
 
-        // GET: Retiroes/Details/5
+        // DETAILS
         public ActionResult Details(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+
             Retiro retiro = db.Retiro.Find(id);
+
             if (retiro == null)
-            {
                 return HttpNotFound();
-            }
+
             return View(retiro);
         }
 
-        // GET: Retiroes/Create
+        // CREATE GET
         public ActionResult Create()
         {
             ViewBag.IdMatricula = new SelectList(db.Matricula, "IdMatricula", "CodigoMatricula");
             return View();
         }
 
-
+        // CREATE POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "IdRetiro,CodigoRetiro,IdMatricula,FechaRetiro,Motivo")] Retiro retiro)
+        public ActionResult Create(Retiro retiro)
         {
-            if (ModelState.IsValid)
+            try
             {
-                int ultimoId = 1;
-
-                if (db.Retiro.Any())
+                if (ModelState.IsValid)
                 {
-                    ultimoId = db.Retiro.Max(r => r.IdRetiro) + 1;
+                    int ultimoId = db.Retiro.Any()
+                        ? db.Retiro.Max(r => r.IdRetiro) + 1
+                        : 1;
+
+                    retiro.CodigoRetiro = "RET-" + ultimoId.ToString("000");
+
+                    db.Retiro.Add(retiro);
+                    db.SaveChanges();
+
+                    TempData["Success"] = "Retiro registrado correctamente";
+                    return RedirectToAction("Index");
                 }
-
-                retiro.CodigoRetiro = "RET-" + ultimoId.ToString("000");
-
-                db.Retiro.Add(retiro);
-                db.SaveChanges();
-
-                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error: " + ex.Message;
             }
 
-            ViewBag.IdMatricula = new SelectList(
-                db.Matricula,
-                "IdMatricula",
-                "CodigoMatricula",
-                retiro.IdMatricula);
-
+            ViewBag.IdMatricula = new SelectList(db.Matricula, "IdMatricula", "CodigoMatricula", retiro.IdMatricula);
             return View(retiro);
         }
 
-        // GET: Retiroes/Edit/5
+        // EDIT GET
         public ActionResult Edit(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+
             Retiro retiro = db.Retiro.Find(id);
+
             if (retiro == null)
-            {
                 return HttpNotFound();
-            }
+
             ViewBag.IdMatricula = new SelectList(db.Matricula, "IdMatricula", "CodigoMatricula", retiro.IdMatricula);
             return View(retiro);
         }
 
-
+        // EDIT POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IdRetiro,CodigoRetiro,IdMatricula,FechaRetiro,Motivo")] Retiro retiro)
+        public ActionResult Edit(Retiro retiro)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(retiro).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(retiro).State = EntityState.Modified;
+                    db.SaveChanges();
+
+                    TempData["Success"] = "Retiro actualizado correctamente";
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error: " + ex.Message;
             }
 
             ViewBag.IdMatricula = new SelectList(db.Matricula, "IdMatricula", "CodigoMatricula", retiro.IdMatricula);
             return View(retiro);
         }
 
-        // GET: Retiroes/Delete/5
+        // DELETE GET
         public ActionResult Delete(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+
             Retiro retiro = db.Retiro.Find(id);
+
             if (retiro == null)
-            {
                 return HttpNotFound();
-            }
+
             return View(retiro);
         }
 
-        // POST: Retiroes/Delete/5
+        // DELETE POST
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Retiro retiro = db.Retiro.Find(id);
-            db.Retiro.Remove(retiro);
-            db.SaveChanges();
+            try
+            {
+                Retiro retiro = db.Retiro.Find(id);
+
+                db.Retiro.Remove(retiro);
+                db.SaveChanges();
+
+                TempData["Success"] = "Retiro eliminado correctamente";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error: " + ex.Message;
+            }
+
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
                 db.Dispose();
-            }
+
             base.Dispose(disposing);
         }
     }
